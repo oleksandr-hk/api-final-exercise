@@ -1,9 +1,14 @@
+import 'dotenv/config';
 import { PrismaClient } from '../src/generated/prisma/client';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import bcrypt from 'bcryptjs';
-import { randomUUID } from 'crypto';
 
-const databaseUrl = process.env.DATABASE_URL!;
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL is not set. Configure it in your .env file.');
+}
+
 const dbUrl = databaseUrl.replace(/^mysql:\/\//, 'mariadb://');
 const adapter = new PrismaMariaDb(dbUrl);
 const prisma = new PrismaClient({ adapter });

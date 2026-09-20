@@ -3,6 +3,7 @@ node_modules/
 .env
 .env.local
 /tmp/
+tests/file_storage/*.token
 
 node_modules/
 /test-results/

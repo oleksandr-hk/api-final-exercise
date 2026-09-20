@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider     = "mysql"
   relationMode = "prisma"
 }
 
@@ -16,25 +16,25 @@ enum UserRole {
 // ─── Auth Models ─────────────────────────────────────────────
 
 model User {
-  id             String    @id @default(cuid())
-  email          String    @unique
+  id             String   @id @default(cuid())
+  email          String   @unique
   name           String?
   hashedPassword String?
-  role           UserRole  @default(USER)
-  isActive       Boolean   @default(true)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  role           UserRole @default(USER)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  refreshTokens  RefreshToken[]
-  purchases      Purchase[]
-  userProgress   UserProgress[]
+  refreshTokens   RefreshToken[]
+  purchases       Purchase[]
+  userProgress    UserProgress[]
   promoCodeUsages PromoCodeUsage[]
 }
 
 model OAuthClient {
   id           String   @id @default(cuid())
   clientId     String   @unique
-  clientSecret String   // hashed
+  clientSecret String // hashed
   name         String
   grants       String   @db.Text // JSON array: ["password","client_credentials","refresh_token"]
   scopes       String   @db.Text // JSON array: ["read","write","admin"]
@@ -68,21 +68,21 @@ model Category {
   name String @unique
   slug String @unique
 
-  courses Course[]
+  courses       Course[]
   learningPaths LearningPath[]
 }
 
 model Course {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  description String?  @db.Text
-  imageUrl    String?  @db.Text
-  price       Decimal? @db.Decimal(10, 2)
-  isPublished Boolean  @default(false)
-  isListed    Boolean  @default(true)
-  isFeatured  Boolean  @default(false)
-  featuredOrder Int    @default(0)
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  description   String?  @db.Text
+  imageUrl      String?  @db.Text
+  price         Decimal? @db.Decimal(10, 2)
+  isPublished   Boolean  @default(false)
+  isListed      Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  featuredOrder Int      @default(0)
 
   outcomes     String? @db.Text
   requirements String? @db.Text
@@ -112,7 +112,7 @@ model Chapter {
   isFree      Boolean @default(false)
 
   courseId String
-  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   userProgress UserProgress[]
 
@@ -128,7 +128,7 @@ model Attachment {
   url  String @db.Text
 
   courseId String
-  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -141,7 +141,7 @@ model Attachment {
 model Purchase {
   id        String  @id @default(cuid())
   userId    String
-  courseId   String
+  courseId  String
   amount    Decimal @db.Decimal(10, 2)
   promoCode String?
 
@@ -156,16 +156,16 @@ model Purchase {
 }
 
 model PromoCode {
-  id              String    @id @default(cuid())
-  code            String    @unique
+  id              String   @id @default(cuid())
+  code            String   @unique
   courseId        String
   discountPercent Int
   maxUses         Int?
-  currentUses     Int       @default(0)
+  currentUses     Int      @default(0)
   expiresAt       DateTime
-  isActive        Boolean   @default(true)
+  isActive        Boolean  @default(true)
 
-  course Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   usages PromoCodeUsage[]
 
   createdAt DateTime @default(now())
@@ -257,11 +257,11 @@ model LearningPath {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  categories  Category[]
-  modules     LearningPathModule[]
-  
-  videoId     String?  @unique
-  video       YouTubeVideo? @relation(fields: [videoId], references: [id])
+  categories Category[]
+  modules    LearningPathModule[]
+
+  videoId String?       @unique
+  video   YouTubeVideo? @relation(fields: [videoId], references: [id])
 
   certificate Certificate?
 
@@ -277,9 +277,9 @@ model LearningPathModule {
   description    String? @db.Text
   position       Int
   learningPathId String
-  
+
   learningPath LearningPath @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -304,7 +304,7 @@ model Instructor {
   name      String
   bio       String? @db.Text
   avatarUrl String? @db.Text
-  
+
   learningPaths LearningPath[]
 
   createdAt DateTime @default(now())
