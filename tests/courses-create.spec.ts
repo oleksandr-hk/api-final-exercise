@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { getRequiredEnv } from './utils/utils';
+
+const ADMIN_EMAIL = getRequiredEnv('ADMIN_EMAIL');
+const ADMIN_PASSWORD = getRequiredEnv('ADMIN_PASSWORD');
 
 test('POST /api/courses: create a new course with admin token', async ({
   request,
@@ -7,8 +11,8 @@ test('POST /api/courses: create a new course with admin token', async ({
   const tokenResponse = await request.post('/api/oauth/token', {
     data: {
       grant_type: 'password',
-      email: 'admin@dojo.api',
-      password: 'Password1',
+      email: ADMIN_EMAIL,
+      password: ADMIN_PASSWORD,
     },
   });
   

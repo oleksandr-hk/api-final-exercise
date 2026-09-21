@@ -31,11 +31,11 @@ jobs:
 
     env:
       DATABASE_URL: mysql://root:test@127.0.0.1:3306/dojo_api
-      JWT_SECRET: ci-test-secret-at-least-32-characters-long
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       UPLOAD_DIR: ./uploads
-      ADMIN_NAME: Admin User
-      ADMIN_EMAIL: admin@dojo.api
-      ADMIN_PASSWORD: Password1
+      ADMIN_NAME: ${{ secrets.ADMIN_NAME }}
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       BASE_URL: http://127.0.0.1:3000
       CI: "true"
 

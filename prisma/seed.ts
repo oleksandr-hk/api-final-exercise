@@ -17,18 +17,32 @@ async function main() {
   console.log('🌱 Seeding database...');
 
   // ─── Admin User ────────────────────────────────────────────
-  const adminPassword = await bcrypt.hash('Password1', 12);
+  const adminName = process.env.ADMIN_NAME;
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPasswordPlain = process.env.ADMIN_PASSWORD;
+
+  if (!adminName || !adminEmail || !adminPasswordPlain) {
+    throw new Error(
+      'ADMIN_NAME, ADMIN_EMAIL, and ADMIN_PASSWORD must be configured before seeding.',
+    );
+  }
+
+  const adminPassword = await bcrypt.hash(adminPasswordPlain, 12);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@dojo.api' },
-    update: {},
+    where: { email: adminEmail },
+    update: {
+      name: adminName,
+      hashedPassword: adminPassword,
+      role: 'ADMIN',
+    },
     create: {
-      email: 'admin@dojo.api',
-      name: 'Admin User',
+      email: adminEmail,
+      name: adminName,
       hashedPassword: adminPassword,
       role: 'ADMIN',
     },
   });
-  console.log(`✅ Admin user: ${admin.email} (password: Password1)`);
+  console.log(`✅ Admin user: ${admin.email}`);
 
   // ─── Regular User ─────────────────────────────────────────
   const userPassword = await bcrypt.hash('Password1', 12);
@@ -247,10 +261,8 @@ async function main() {
 
   console.log('\n🎉 Seed complete!');
   console.log('\n📋 Quick start:');
-  console.log('  1. POST /api/auth/register — or use seeded admin@dojo.api');
-  console.log(
-    '  2. POST /api/oauth/token — { grant_type: "password", email: "admin@dojo.api", password: "Password1" }',
-  );
+  console.log('  1. POST /api/auth/register — or use the seeded admin');
+  console.log('  2. POST /api/oauth/token — use the configured admin credentials');
   console.log('  3. Use the access_token as Bearer token');
   console.log('  4. Visit /api/docs for interactive Swagger UI');
 }
