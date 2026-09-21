@@ -74,7 +74,7 @@ test.describe(
       });
     });
 
-    test("title longer than 191 characters returns 400", async ({
+    test("title longer than 191 characters returns 400 [Application bug]", async ({
       adminRequest,
     }) => {
       const adminApi = new ApiController(adminRequest);
@@ -112,13 +112,14 @@ test.describe(
     test("unauthenticated request returns 401", async ({ nonAuthRequest }) => {
       const nonAuthApi = new ApiController(nonAuthRequest);
 
-      const response = await nonAuthApi.learningPathController.createLearningPath(
-        {
-          title: generateRandomAlphabeticalString(10),
-          instructor: generateRandomInstructor(),
-        },
-        { failOnStatusCode: false },
-      );
+      const response =
+        await nonAuthApi.learningPathController.createLearningPath(
+          {
+            title: generateRandomAlphabeticalString(10),
+            instructor: generateRandomInstructor(),
+          },
+          { failOnStatusCode: false },
+        );
 
       expect(response.response.status()).toBe(401);
       expect(response.json).toHaveProperty("error", "Unauthorized");
